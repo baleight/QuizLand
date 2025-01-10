@@ -11,7 +11,7 @@
             <strong>Time left: <span id="time-left">15</span> seconds</strong>
         </div>
 
-        <form method="POST" action="{% url 'quiz:submit_answer' question_id=question.id %}">
+        <form method="POST" action="{% url 'quizapp:submit_answer' question_id=question.id %}">
             {% csrf_token %}
 
             <div class="mb-4 quiz-question">

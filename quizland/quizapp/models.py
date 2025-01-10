@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Ogni tipo di quiz ha un nome univoco e una descrizione.
 class QuizType(models.Model):
     name = models.CharField(max_length=100, unique=True)  # Nome del quiz (deve essere univoco).
-    description = models.TextField()  # Descrizione del quiz.
+    description = models.TextField(blank=True)  # Descrizione del quiz.
 
     def __str__(self):
         # Rappresentazione leggibile del modello.

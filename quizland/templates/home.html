@@ -4,7 +4,7 @@
     {% if user.is_authenticated %}
         <h1 class="text-center mb-4">Select a Quiz to Start</h1>
         <div class="row">
-            {% for quiz in quiz_types %}
+            {% for quizapp in quiz_types %}
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100 d-flex flex-column">
                     <div class="card-body">
@@ -12,7 +12,7 @@
                         <p class="card-text text-center text-muted">{{ quiz.description }}</p>
                     </div>
                     <div class="mt-auto text-center">
-                        <a href="{% url 'quiz:start_quiz' quiz.id %}" class="btn btn-outline-primary w-90 my-4">
+                        <a href="{% url 'quizapp:start_quiz' quiz.id %}" class="btn btn-outline-primary w-90 my-4">
                             Start {{ quiz.name }} Quiz
                         </a>
                     </div>
