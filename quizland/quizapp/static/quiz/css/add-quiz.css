@@ -1,0 +1,87 @@
+/* Stile per l'header principale nella pagina di aggiunta quiz */
+h1 {
+    font-weight: bold;
+    color: #343a40; /* Colore grigio scuro per il testo */
+}
+
+/* Contenitore principale della sezione "Aggiungi Quiz" */
+.add-quiz-container {
+    max-width: 530px; /* Larghezza massima per evitare layout troppo ampi */
+    background-color: #f8f9fa; /* Colore di sfondo chiaro */
+    border-radius: 8px; /* Angoli arrotondati */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombreggiatura leggera */
+    padding: 30px; /* Spaziatura interna uniforme */
+    margin-top: 1rem; /* Spaziatura sopra */
+    margin-bottom: 1rem; /* Spaziatura sotto */
+}
+
+/* Stile per l'header specifico all'interno del contenitore */
+.add-quiz-container h1 {
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 2rem; /* Spaziatura inferiore tra l'header e gli altri elementi */
+    text-align: center; /* Centrare il testo */
+}
+
+/* Stile per le etichette dei campi del form */
+.form-group label {
+    font-weight: 600; /* Testo leggermente più spesso */
+    color: #495057; /* Colore grigio scuro */
+}
+
+/* Stile per i campi di input e textarea */
+.form-group input,
+.form-group textarea {
+    border: 1px solid #ced4da; /* Bordo grigio chiaro */
+    border-radius: 4px; /* Angoli arrotondati */
+    padding: 10px; /* Spaziatura interna */
+    font-size: 1rem; /* Dimensione del testo */
+}
+
+/* Specifiche aggiuntive per i campi di tipo textarea */
+.form-group textarea {
+    resize: vertical; /* Permette il ridimensionamento solo in verticale */
+    min-height: 100px; /* Altezza minima */
+}
+
+/* Stile generale per i pulsanti */
+.btn {
+    font-size: 1.1rem;
+    padding: 12px;
+}
+
+/* Stile per il pulsante di conferma */
+.btn-success {
+    background-color: #28a745; /* Verde */
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Verde più scuro per l'hover */
+}
+
+/* Stile per il pulsante secondario (annulla/indietro) */
+.btn-secondary {
+    background-color: #6c757d; /* Grigio scuro */
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268; /* Grigio più scuro per l'hover */
+}
+
+/* Rimuove la decorazione del testo dai link che fungono da pulsanti */
+a.btn {
+    text-decoration: none;
+}
+
+/* Stile responsivo per dispositivi con larghezza fino a 768px */
+@media screen and (max-width: 768px) {
+    .add-quiz-container {
+        padding: 20px; /* Riduce la spaziatura interna */
+    }
+
+    .add-quiz-container h1 {
+        font-size: 1.5rem; /* Riduce la dimensione del testo */
+    }
+}

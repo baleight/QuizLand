@@ -1,0 +1,37 @@
+/* Contenitore principale della sezione quiz */
+.quiz-container {
+    border: 2px solid #007bff; /* Bordo blu */
+    border-radius: 8px; /* Angoli arrotondati */
+    padding: 20px; /* Spaziatura interna */
+    background-color: #f8f9fa; /* Sfondo chiaro */
+}
+
+/* Header del quiz */
+.quiz-heading {
+    text-align: center; /* Centrare il testo */
+    color: #0080ff; /* Blu brillante */
+}
+
+/* Stile per il testo della domanda */
+.quiz-question {
+    font-weight: bold; /* Testo in grassetto */
+    margin-bottom: 1rem; /* Spaziatura inferiore */
+}
+
+/* Contenitore delle opzioni di risposta */
+.quiz-options .form-check {
+    margin-bottom: 1rem; /* Spaziatura tra le opzioni */
+}
+
+/* Contenitore per il pulsante di invio */
+.quiz-submit-button {
+    display: flex; /* Imposta il layout flessibile */
+    justify-content: center; /* Centra il pulsante */
+    margin-top: 1.5rem; /* Spaziatura superiore */
+}
+
+/* Stile del pulsante di invio */
+.quiz-submit-button button {
+    padding: 10px 20px; /* Spaziatura interna */
+    font-size: 16px; /* Dimensione del testo */
+}

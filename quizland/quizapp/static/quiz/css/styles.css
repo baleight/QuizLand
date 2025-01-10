@@ -1,0 +1,92 @@
+/* Contenitore principale per le pagine di gestione */
+.manage-container {
+    padding: 30px; /* Spaziatura interna uniforme */
+    background-color: #f8f9fa; /* Sfondo chiaro */
+    border-radius: 8px; /* Angoli arrotondati */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombreggiatura leggera */
+}
+
+/* Stile per le tabelle */
+.table {
+    border-radius: 8px; /* Angoli arrotondati */
+    overflow: hidden; /* Nasconde eventuali bordi in eccesso */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ombreggiatura per un effetto flottante */
+}
+
+/* Stile per le celle della tabella */
+.table th, .table td {
+    padding: 15px; /* Spaziatura interna delle celle */
+}
+
+/* Stile per l'header della tabella */
+.table th {
+    background-color: #343a40; /* Sfondo grigio scuro */
+    color: white; /* Testo bianco */
+    font-weight: bold; /* Testo in grassetto */
+}
+
+/* Righe della tabella a strisce */
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa; /* Sfondo chiaro */
+}
+
+.table-striped tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Sfondo bianco */
+}
+
+/* Stile per i pulsanti */
+.btn-primary {
+    font-size: 1rem; /* Dimensione del testo */
+    padding: 10px 15px; /* Spaziatura interna */
+    border-radius: 5px; /* Angoli arrotondati */
+}
+
+.btn-primary:hover {
+    background-color: #007bff; /* Colore hover blu */
+    border-color: #007bff;
+}
+
+/* Pulsanti piccoli */
+.btn-sm {
+    font-size: 0.875rem;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+/* Stile per i pulsanti di avviso */
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+}
+
+/* Stile per i pulsanti di eliminazione */
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+/* Stile responsivo per dispositivi con larghezza fino a 768px */
+@media screen and (max-width: 768px) {
+    .table th, .table td {
+        padding: 8px; /* Riduce la spaziatura per dispositivi più piccoli */
+    }
+
+    .btn-primary {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+
+    .manage-questions-container {
+        padding: 20px;
+    }
+}
