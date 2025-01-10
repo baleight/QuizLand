@@ -8,9 +8,9 @@ app_name = 'quizapp'
 # Definizione delle rotte URL per l'app Quiz.
 urlpatterns = [
     path('', views.home, name='home'),  # Homepage dell'app.
-    path('start/<int:quiz_type_id>/', views.StartQuizView.as_view(), name='start_quiz'),  # Inizio di un quiz.
-    path('submit_answer/<int:question_id>/', views.SubmitAnswerView.as_view(), name='submit_answer'),  # Invio di una risposta.
-    path('results/<int:quiz_type_id>/', views.QuizResultView.as_view(), name='quiz_results'),  # Visualizzazione dei risultati.
+    path('start/<int:quiz_type_id>/', views.InizioQuizView.as_view(), name='start_quiz'),  # Inizio di un quiz.
+    path('submit_answer/<int:question_id>/', views.InviaAnswerView.as_view(), name='submit_answer'),  # Invio di una risposta.
+    path('results/<int:quiz_type_id>/', views.RisultatiQuizView.as_view(), name='quiz_results'),  # Visualizzazione dei risultati.
     path('reset/<int:pk>/', views.ResetQuizView.as_view(), name='reset_quiz'),  # Reset di un quiz.
     path('manage-quiz/', views.manage_quiz, name="manage-quiz"),  # Gestione dei quiz per gli amministratori.
     path('add-quiz/', views.add_quiz, name="add_quiz"),  # Aggiunta di un nuovo quiz.

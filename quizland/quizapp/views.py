@@ -5,80 +5,172 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Question, QuizSession, QuizType
 from django.contrib.auth.decorators import user_passes_test
 
-# Funzione per visualizzare la homepage.
-# Recupera tutti i tipi di quiz dal database e li passa al template "home.html".
+
 def home(request):
-    quiz_types = QuizType.objects.all()  # Recupera tutti i tipi di quiz.
-    return render(request, 'home.html', {'quiz_types': quiz_types})  # Renderizza la homepage con i quiz disponibili.
+    quiz_types = QuizType.objects.all()
+    return render(request, 'home.html', {'quiz_types': quiz_types})
 
-# Funzione di controllo per verificare se l'utente è un superuser.
-# Questa funzione è utilizzata come decoratore per limitare l'accesso alle funzioni di gestione dei quiz.
 def superuser_only(user):
-    return user.is_superuser  # Ritorna True solo se l'utente è un amministratore.
+    return user.is_superuser
 
-# Funzione per la gestione dei quiz da parte degli amministratori.
-# Recupera tutti i quiz esistenti e li passa al template "manage_quiz.html".
 @user_passes_test(superuser_only)
 def manage_quiz(request):
-    quizzes = QuizType.objects.all()  # Recupera tutti i quiz dal database.
-    return render(request, 'quiz/manage_quiz.html', {'quizzes': quizzes})  # Renderizza la pagina di gestione dei quiz.
+    quizzes = QuizType.objects.all()
+    return render(request, 'quiz/manage_quiz.html', {'quizzes': quizzes})
 
-# Funzione per aggiungere un nuovo quiz.
-# Se il metodo della richiesta è POST, salva il nuovo quiz, altrimenti mostra il form vuoto.
 @user_passes_test(superuser_only)
 def add_quiz(request):
-    if request.method == "POST":  # Controlla se il metodo della richiesta è POST.
-        form = QuizForm(request.POST)  # Inizializza il form con i dati inviati dall'utente.
-        if form.is_valid():  # Controlla se i dati del form sono validi.
-            form.save()  # Salva il nuovo quiz nel database.
-            return redirect('quiz:manage-quiz')  # Reindirizza alla pagina di gestione dei quiz.
+    if request.method == "POST":
+        form = QuizForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('quiz:manage-quiz')
     else:
-        form = QuizForm()  # Inizializza un form vuoto per la creazione di un nuovo quiz.
-    return render(request, 'quiz/add_quiz.html', {'form': form})  # Renderizza la pagina di aggiunta quiz.
+        form = QuizForm()
+    return render(request, 'quiz/add_quiz.html', {'form' : form})
 
-# Funzione per modificare un quiz esistente.
 @user_passes_test(superuser_only)
 def update_quiz(request, pk):
-    quiz = get_object_or_404(QuizType, pk=pk)  # Recupera il quiz o restituisce un errore 404.
-    if request.method == "POST":  # Controlla se il metodo della richiesta è POST.
-        form = QuizForm(request.POST, instance=quiz)  # Inizializza il form con i dati esistenti.
-        if form.is_valid():  # Controlla se i dati del form sono validi.
-            form.save()  # Salva le modifiche nel database.
-            return redirect('quiz:manage-quiz')  # Reindirizza alla pagina di gestione dei quiz.
+    quiz = get_object_or_404(QuizType, pk=pk)
+    if request.method == "POST":
+        form = QuizForm(request.POST, instance=quiz)
+        if form.is_valid():
+            form.save()
+            return redirect('quiz:manage-quiz')
     else:
-        form = QuizForm(instance=quiz)  # Inizializza un form con i dati del quiz da modificare.
-    return render(request, 'quiz/update_quiz.html', {'form': form, 'quiz': quiz})  # Renderizza la pagina di modifica quiz.
+        form = QuizForm(instance=quiz)
+    return render(request, 'quiz/update_quiz.html', {'form':form, 'quiz':quiz})
 
-# Funzione per eliminare un quiz.
 @user_passes_test(superuser_only)
 def delete_quiz(request, pk):
-    quiz = get_object_or_404(QuizType, pk=pk)  # Recupera il quiz o restituisce un errore 404.
-    quiz.delete()  # Elimina il quiz dal database.
-    return redirect('quiz:manage-quiz')  # Reindirizza alla pagina di gestione dei quiz.
+    quiz = get_object_or_404(QuizType, pk=pk)
+    quiz.delete()
+    return redirect('quiz:manage-quiz')
 
-# Funzione per gestire le domande associate a un quiz.
 @user_passes_test(superuser_only)
 def manage_questions(request, pk):
-    quiz_type = get_object_or_404(QuizType, pk=pk)  # Recupera il tipo di quiz.
-    questions = quiz_type.questions.all()  # Recupera tutte le domande associate al quiz.
-    return render(request, 'quiz/manage_questions.html', {'quiz_type': quiz_type, 'questions': questions})  # Renderizza la pagina di gestione delle domande.
+    quiz_type =  get_object_or_404(QuizType, pk=pk)
+    questions = quiz_type.questions.all()
+    return render(request, 'quiz/manage_questions.html', {'quiz_type':quiz_type, 'questions': questions})
 
-# Funzione per aggiungere domande a un quiz.
 @user_passes_test(superuser_only)
 def add_questions(request, pk):
-    quiz_type = get_object_or_404(QuizType, pk=pk)  # Recupera il tipo di quiz.
-    if request.method == "POST":  # Controlla se il metodo della richiesta è POST.
-        form = QuestionForm(request.POST)  # Inizializza il form con i dati inviati dall'utente.
-        if form.is_valid():  # Controlla se i dati del form sono validi.
-            question = form.save(commit=False)  # Crea un'istanza della domanda senza salvarla.
-            question.quiz_type = quiz_type  # Associa la domanda al quiz.
-            question.save()  # Salva la domanda nel database.
-            return redirect('quiz:manage_questions', pk=quiz_type.pk)  # Reindirizza alla gestione delle domande.
+    quiz_type = get_object_or_404(QuizType, pk=pk)
+    if request.method == "POST":
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.quiz_type = quiz_type
+            question.save()
+            return redirect('quiz:manage_questions', pk=quiz_type.pk)
+        else:
+            print(form.errors)
     else:
-        form = QuestionForm()  # Inizializza un form vuoto per la creazione di una nuova domanda.
+        form = QuestionForm()
 
-    # Aggiunge classi Bootstrap ai campi del form per migliorare lo stile.
+    # Adding Bootstrap classes
     for field in ['question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer']:
         form.fields[field].widget.attrs.update({'class': 'form-control my-1'})
 
-    return render(request, 'quiz/add_question.html', {'form': form, 'quiz_type': quiz_type})  # Renderizza la pagina di aggiunta domande.
+    return render(request, 'quiz/add_question.html', {'form': form, 'quiz_type': quiz_type})
+
+@user_passes_test(superuser_only)
+def update_question(request, pk):
+    question = get_object_or_404(Question, pk=pk)
+
+    if request.method == "POST":
+        form = QuestionForm(request.POST, instance=question)
+        if form.is_valid():
+            form.save()
+            return redirect('quiz:manage_questions', pk=question.quiz_type.pk)
+    else:
+        form = QuestionForm(instance=question)
+
+    # Adding Bootstrap classes
+    for field in ['question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_answer']:
+        form.fields[field].widget.attrs.update({'class': 'form-control my-1'})
+
+    return render(request, 'quiz/update_question.html', {'form': form, 'question': question})
+
+@user_passes_test(superuser_only)
+def delete_question(request, pk):
+    question = get_object_or_404(Question, pk=pk)
+    question.delete()
+    return redirect('quiz:manage_questions', pk=question.quiz_type.pk)
+
+
+class InizioQuizView(LoginRequiredMixin, View):
+    def get(self, request, quiz_type_id):
+        try:
+            quiz_type = QuizType.objects.get(id=quiz_type_id)
+        except QuizType.DoesNotExist:
+            return redirect('quiz:home')
+
+        answered_questions = QuizSession.objects.filter(user=request.user).values_list('question_id', flat=True)
+
+        remaining_questions = Question.objects.filter(quiz_type=quiz_type).exclude(id__in=answered_questions)
+
+        if remaining_questions.exists():
+            question = remaining_questions.order_by('?').first()
+            question_index = answered_questions.count() + 1
+            return render(request, 'quiz/start_quiz.html', {'question': question, 'quiz_type': quiz_type, 'question_index': question_index})
+        else:
+            return redirect('quiz:quiz_results', quiz_type_id=quiz_type_id)
+
+class InviaAnswerView(LoginRequiredMixin, View):
+    def post(self, request, question_id):
+        question = get_object_or_404(Question, id=question_id)
+        quiz_type_id = question.quiz_type.id
+        selected_answer = request.POST.get('answer')
+
+        if not selected_answer:
+            QuizSession.objects.create(user=request.user,
+                                       question = question,
+                                       status='unattempted'
+                                       )
+        else:
+            is_correct = selected_answer == question.correct_answer
+            QuizSession.objects.create(
+                user=request.user,
+                question=question,
+                selected_answer=selected_answer,
+                is_correct=is_correct,
+                status = 'attempted'
+            )
+
+        answered_questions = QuizSession.objects.filter(user=request.user).values_list('question_id', flat=True)
+        remaining_questions = Question.objects.filter(quiz_type=question.quiz_type).exclude(id__in=answered_questions)
+
+        if remaining_questions.exists():
+            return redirect('quiz:start_quiz', quiz_type_id=quiz_type_id)
+        else:
+            return redirect('quiz:quiz_results', quiz_type_id=quiz_type_id)
+
+
+class RisultatiQuizView(LoginRequiredMixin, View):
+    def get(self, request, quiz_type_id):
+
+        quiz_type = get_object_or_404(QuizType, id=quiz_type_id)
+        quiz_sessions = QuizSession.objects.filter(user=request.user, question__quiz_type=quiz_type)
+
+        correct_answers = quiz_sessions.filter(is_correct=True).count()
+        incorrect_answers = quiz_sessions.filter(is_correct=False).count()
+        total_questions = quiz_sessions.count()
+        unattempted_questions = QuizSession.objects.filter(user=request.user, status='unattempted').count()
+        unattempted_session = quiz_sessions.filter(status='unattempted')
+        return render(request, 'quiz/quiz_results.html', {
+            'quiz_type': quiz_type,
+            'correct_answers': correct_answers,
+            'incorrect_answers': incorrect_answers,
+            'total_questions': total_questions,
+            'quiz_sessions': quiz_sessions,
+            'unattempted_questions':  unattempted_questions,
+            'unattempted_session' : unattempted_session,
+        })
+
+
+class ResetQuizView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        quiz_type = get_object_or_404(QuizType, id=pk)
+        QuizSession.objects.filter(user=request.user, question__quiz_type=quiz_type).delete()
+        return redirect('quiz:home')

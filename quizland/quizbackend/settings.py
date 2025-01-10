@@ -51,7 +51,7 @@ MIDDLEWARE = [
 
 # File di configurazione delle URL.
 # ROOT_URLCONF definisce il modulo principale per il routing delle URL.
-ROOT_URLCONF = "quizapp.urls"
+ROOT_URLCONF = "quizbackend.urls"
 
 # Configurazione dei template.
 # I template vengono utilizzati per generare le pagine web dinamiche.
@@ -73,7 +73,7 @@ TEMPLATES = [
 
 # Configurazione dell'applicazione WSGI.
 # Questo modulo è responsabile di gestire le richieste HTTP in produzione.
-WSGI_APPLICATION = "quizapp.wsgi.application"
+WSGI_APPLICATION = "quizbackend.wsgi.application"
 
 # Configurazione del database.
 # Per lo sviluppo, viene utilizzato SQLite, un database leggero e integrato.
