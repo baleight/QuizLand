@@ -4,12 +4,14 @@ from django.contrib.auth.models import User
 # Modello per i tipi di quiz.
 # Ogni tipo di quiz ha un nome univoco e una descrizione.
 class QuizType(models.Model):
-    name = models.CharField(max_length=100, unique=True)  # Nome del quiz (deve essere univoco).
-    description = models.TextField(blank=True)  # Descrizione del quiz.
+    name = models.CharField(max_length=100)
+    description = models.TextField()
 
-    def __str__(self):
-        # Rappresentazione leggibile del modello.
-        return self.name
+    def is_completed_by_user(self, user):
+        completed_questions = QuizSession.objects.filter(user=user, question__quiz_type=self).count()
+        total_questions = self.questions.count()
+        return completed_questions == total_questions
+
 
 # Modello per le domande di un quiz.
 # Ogni domanda appartiene a un tipo di quiz e ha un testo, quattro opzioni e una risposta corretta.

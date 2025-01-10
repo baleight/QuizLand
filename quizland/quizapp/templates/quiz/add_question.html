@@ -3,14 +3,14 @@
 {% block content %}
 <div class="container mt-4 mb-4" style="max-width: 800px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 30px;">
     <!-- Header della pagina -->
-    <h1 class="text-center">Add a New Question</h1>
+    <h1 class="text-center">Aggiungi una nuova domanda</h1>
 
     <!-- Form per aggiungere una nuova domanda -->
     <form method="POST">
         {% csrf_token %}
         <div>
             <!-- Mostra il tipo di quiz -->
-            <label id="id_quiz_type" style="margin-top:5px">Quiz Type</label>
+            <label id="id_quiz_type" style="margin-top:5px">Categoria di quiz</label>
             <div class="form-control">{{ quiz_type }}</div>
         </div>
 
@@ -65,8 +65,8 @@
 
         <!-- Pulsanti di azione -->
         <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Add Question</button>
-            <a href="{% url 'quizapp:manage_questions' quiz_type.pk %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Aggiungi domanda</button>
+            <a href="{% url 'quizapp:manage_questions' quiz_type.pk %}" class="btn btn-secondary">Cancella</a>
         </div>
     </form>
 </div>

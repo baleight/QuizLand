@@ -8,13 +8,18 @@
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm h-100 d-flex flex-column">
                     <div class="card-body">
-                        <h5 class="card-title text-center text-primary">{{ quiz.name }}</h5>
-                        <p class="card-text text-center text-muted">{{ quiz.description }}</p>
+                        <h5 class="card-title text-center text-primary">{{ quizapp.name }}</h5>
+                        <p class="card-text text-center text-muted">{{ quizapp.description }}</p>
                     </div>
                     <div class="mt-auto text-center">
-                        <a href="{% url 'quizapp:start_quiz' quiz.id %}" class="btn btn-outline-primary w-90 my-4">
-                            Start {{ quiz.name }} Quiz
-                        </a>
+                      <a href="{% if quizapp.is_completed %}{% url 'quizapp:quiz_results' quizapp.id %}{% else %}{% url 'quizapp:start_quiz' quizapp.id %}{% endif %}"
+                         class="btn btn-outline-primary w-90 my-4">
+                          {% if quizapp.is_completed %}
+                              Risultati quiz: {{ quizapp.name }}
+                          {% else %}
+                              Inizia quiz: {{ quizapp.name }}
+                          {% endif %}
+                      </a>
                     </div>
                 </div>
             </div>

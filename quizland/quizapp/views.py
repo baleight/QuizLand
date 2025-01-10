@@ -5,9 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Question, QuizSession, QuizType
 from django.contrib.auth.decorators import user_passes_test
 
-
 def home(request):
     quiz_types = QuizType.objects.all()
+    for quiz in quiz_types:
+        if request.user.is_authenticated:  # Controlla se l'utente è autenticato
+            quiz.is_completed = quiz.is_completed_by_user(request.user)
+        else:
+            quiz.is_completed = False  # Imposta un valore predefinito per gli utenti anonimi
     return render(request, 'home.html', {'quiz_types': quiz_types})
 
 def superuser_only(user):
@@ -24,7 +28,7 @@ def add_quiz(request):
         form = QuizForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('quiz:manage-quiz')
+            return redirect('quizapp:manage-quiz')
     else:
         form = QuizForm()
     return render(request, 'quiz/add_quiz.html', {'form' : form})
@@ -36,7 +40,7 @@ def update_quiz(request, pk):
         form = QuizForm(request.POST, instance=quiz)
         if form.is_valid():
             form.save()
-            return redirect('quiz:manage-quiz')
+            return redirect('quizapp:manage-quiz')
     else:
         form = QuizForm(instance=quiz)
     return render(request, 'quiz/update_quiz.html', {'form':form, 'quiz':quiz})
@@ -45,7 +49,7 @@ def update_quiz(request, pk):
 def delete_quiz(request, pk):
     quiz = get_object_or_404(QuizType, pk=pk)
     quiz.delete()
-    return redirect('quiz:manage-quiz')
+    return redirect('quizapp:manage-quiz')
 
 @user_passes_test(superuser_only)
 def manage_questions(request, pk):
@@ -62,7 +66,7 @@ def add_questions(request, pk):
             question = form.save(commit=False)
             question.quiz_type = quiz_type
             question.save()
-            return redirect('quiz:manage_questions', pk=quiz_type.pk)
+            return redirect('quizapp:manage_questions', pk=quiz_type.pk)
         else:
             print(form.errors)
     else:
@@ -82,7 +86,7 @@ def update_question(request, pk):
         form = QuestionForm(request.POST, instance=question)
         if form.is_valid():
             form.save()
-            return redirect('quiz:manage_questions', pk=question.quiz_type.pk)
+            return redirect('quizapp:manage_questions', pk=question.quiz_type.pk)
     else:
         form = QuestionForm(instance=question)
 
@@ -96,7 +100,7 @@ def update_question(request, pk):
 def delete_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
     question.delete()
-    return redirect('quiz:manage_questions', pk=question.quiz_type.pk)
+    return redirect('quizapp:manage_questions', pk=question.quiz_type.pk)
 
 
 class InizioQuizView(LoginRequiredMixin, View):
@@ -104,7 +108,7 @@ class InizioQuizView(LoginRequiredMixin, View):
         try:
             quiz_type = QuizType.objects.get(id=quiz_type_id)
         except QuizType.DoesNotExist:
-            return redirect('quiz:home')
+            return redirect('quizapp:home')
 
         answered_questions = QuizSession.objects.filter(user=request.user).values_list('question_id', flat=True)
 
@@ -115,7 +119,7 @@ class InizioQuizView(LoginRequiredMixin, View):
             question_index = answered_questions.count() + 1
             return render(request, 'quiz/start_quiz.html', {'question': question, 'quiz_type': quiz_type, 'question_index': question_index})
         else:
-            return redirect('quiz:quiz_results', quiz_type_id=quiz_type_id)
+            return redirect('quizapp:quiz_results', quiz_type_id=quiz_type_id)
 
 class InviaAnswerView(LoginRequiredMixin, View):
     def post(self, request, question_id):
@@ -144,7 +148,7 @@ class InviaAnswerView(LoginRequiredMixin, View):
         if remaining_questions.exists():
             return redirect('quiz:start_quiz', quiz_type_id=quiz_type_id)
         else:
-            return redirect('quiz:quiz_results', quiz_type_id=quiz_type_id)
+            return redirect('quizapp:quiz_results', quiz_type_id=quiz_type_id)
 
 
 class RisultatiQuizView(LoginRequiredMixin, View):
@@ -173,4 +177,4 @@ class ResetQuizView(LoginRequiredMixin, View):
     def get(self, request, pk):
         quiz_type = get_object_or_404(QuizType, id=pk)
         QuizSession.objects.filter(user=request.user, question__quiz_type=quiz_type).delete()
-        return redirect('quiz:home')
+        return redirect('quizapp:home')

@@ -11,8 +11,8 @@
             <h3 class="card-title">Summary</h3>
             <div class="card-body">
                 <p><strong>Total Questions:</strong> {{ total_questions }}</p>
-                <p><strong>Correct Answers:</strong> <span class="text-success">{{ correct_answers }}</span></p>
-                <p><strong>Incorrect Answers:</strong> <span class="text-danger">{{ incorrect_answers }}</span></p>
+                <p><strong>Risposta Corretta(lettera)s:</strong> <span class="text-success">{{ correct_answers }}</span></p>
+                <p><strong>InRisposta Corretta(lettera)s:</strong> <span class="text-danger">{{ incorrect_answers }}</span></p>
                 <p><strong> Unattempted Answer:</strong> <span class="text-danger">{{ unattempted_questions }}</span></p>
             </div>
         </div>
@@ -39,7 +39,7 @@
                                     {% endif %}
                                 </span>
                             </p>
-                            <p><strong>Correct Answer:</strong>
+                            <p><strong>Risposta corretta(lettera):</strong>
                                 {% if session.question.correct_answer == "a" %}
                                     <b>a</b> {{ session.question.option_a }}
                                 {% elif session.question.correct_answer == "b" %}
@@ -65,7 +65,7 @@
                 </ul>
             </div>
             <div class="text-center mt-4">
-                <a href="{% url 'quizapp:home' %}" class="btn btn-outline-primary btn-lg mx-2 mb-3">Back to Home</a>
+                <a href="{% url 'quizapp:home' %}" class="btn btn-outline-primary btn-lg mx-2 mb-3">Ritorna alla Home</a>
                 <a href="{% url 'quizapp:reset_quiz' pk=quiz_type.id %}" class="btn btn-outline-danger btn-lg mx-2 mb-3">Reset Quiz</a>
             </div>
         </div>

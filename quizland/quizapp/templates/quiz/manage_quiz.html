@@ -5,32 +5,32 @@
     <link rel="stylesheet" href="{% static 'quiz/css/styles.css' %}">
 
     <div class="container manage-container my-3">
-        <h1 class="text-center mb-4">Manage Quizzes</h1>
+        <h1 class="text-center mb-4">Gestione Quiz</h1>
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="{% url 'quizapp:add_quiz' %}" class="btn btn-primary">Add Quiz</a>
-            <a class="btn btn-primary" href="{% url 'quizapp:home' %}">Back</a>
+            <a href="{% url 'quizapp:add_quiz' %}" class="btn btn-primary">Aggiungi Quiz</a>
+            <a class="btn btn-primary" href="{% url 'quizapp:home' %}">Indietro</a>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Actions</th>
+                        <th>Nome</th>
+                        <th>Descrizione</th>
+                        <th>Azione</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for quizapp in quizzes %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ quiz.name }}</td>
-                        <td>{{ quiz.description }}</td>
+                        <td>{{ quizapp.name }}</td>
+                        <td>{{ quizapp.description }}</td>
                         <td>
-                            <div class="btn-group" role="group" aria-label="Actions">
-                                <a href="{% url 'quizapp:update_quiz' quiz.id %}" class="btn btn-warning btn-sm" style="width: 60px;">Edit</a>
-                                <a href="{% url 'quizapp:delete_quiz' quiz.id %}" class="btn btn-danger btn-sm mx-2" style="width: 60px;">Delete</a>
-                                <a href="{% url 'quizapp:manage_questions' quiz.id %}" class="btn btn-primary btn-sm">Questions</a>
+                            <div class="btn-group" role="group" aria-label="Azione">
+                                <a href="{% url 'quizapp:update_quiz' quizapp.id %}" class="btn btn-warning btn-sm" style="width: 60px;">Modifica</a>
+                                <a href="{% url 'quizapp:delete_quiz' quizapp.id %}" class="btn btn-danger btn-sm mx-2" style="width: 60px;">Elimina</a>
+                                <a href="{% url 'quizapp:manage_questions' quizapp.id %}" class="btn btn-primary btn-sm">Domande</a>
                             </div>
                         </td>
                     </tr>

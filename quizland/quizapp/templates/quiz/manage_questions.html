@@ -10,8 +10,8 @@
 
     <!-- Pulsanti per aggiungere domande e tornare indietro -->
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <a class="btn btn-primary" href="{% url 'quizapp:add_question' quiz_type.pk %}">Add Question</a>
-        <a class="btn btn-primary" href="{% url 'quizapp:manage-quiz' %}">Back</a>
+        <a class="btn btn-primary" href="{% url 'quizapp:add_question' quiz_type.pk %}">Aggiungi domanda</a>
+        <a class="btn btn-primary" href="{% url 'quizapp:manage-quiz' %}">Indietro</a>
     </div>
 
     <!-- Tabella delle domande -->
@@ -19,8 +19,8 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Question Text</th>
-                <th>Actions</th>
+                <th>Testo Domanda</th>
+                <th>Azione</th>
             </tr>
         </thead>
         <tbody>
