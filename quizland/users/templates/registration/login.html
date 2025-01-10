@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center mt-5">
+    <div class="card p-4" style="width: 100%; max-width: 500px;">
+        <div class="container">
+            <h2 class="text-center ">login</h2>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" style="margin: 4px;">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            <div class="form-group mt-1">
+                {{ form.username.errors }}
+                <label for="id_username" class="my-2">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group my-3">
+                {{ form.password.errors }}
+                <label for="id_password" class="my-2">Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 my-3">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
