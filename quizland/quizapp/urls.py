@@ -3,7 +3,7 @@ from . import views
 
 # Definizione dello spazio dei nomi per le URL dell'applicazione.
 # Questo consente di distinguere le rotte di questa app da quelle di altre app nel progetto.
-app_name = 'quiz'
+app_name = 'quizapp'
 
 # Definizione delle rotte URL per l'app Quiz.
 urlpatterns = [

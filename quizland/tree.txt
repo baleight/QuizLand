@@ -1,0 +1,72 @@
+Elenco del percorso delle cartelle
+Numero di serie del volume: 6AA1-3406
+C:.
+¦   db.sqlite3
+¦   manage.py
+¦   tree.txt
+¦   
++---quizapp
+¦   ¦   admin.py
+¦   ¦   apps.py
+¦   ¦   forms.py
+¦   ¦   models.py
+¦   ¦   tests.py
+¦   ¦   urls.py
+¦   ¦   views.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---migrations
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           __init__.cpython-312.pyc
+¦   ¦           
+¦   +---static
+¦   ¦   +---quiz
+¦   ¦       +---css
+¦   ¦               add-quiz.css
+¦   ¦               quiz_styles.css
+¦   ¦               styles.css
+¦   ¦               
+¦   +---templates
+¦   ¦   +---quiz
+¦   ¦           add_question.html
+¦   ¦           add_quiz.html
+¦   ¦           manage_questions.html
+¦   ¦           manage_quiz.html
+¦   ¦           quiz_results.html
+¦   ¦           start_quiz.html
+¦   ¦           update_question.html
+¦   ¦           update_quiz.html
+¦   ¦           
+¦   +---__pycache__
+¦           admin.cpython-312.pyc
+¦           apps.cpython-312.pyc
+¦           forms.cpython-312.pyc
+¦           models.cpython-312.pyc
+¦           urls.cpython-312.pyc
+¦           views.cpython-312.pyc
+¦           __init__.cpython-312.pyc
+¦           
++---quizbackend
+¦   ¦   asgi.py
+¦   ¦   settings.py
+¦   ¦   urls.py
+¦   ¦   wsgi.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---__pycache__
+¦           settings.cpython-312.pyc
+¦           urls.cpython-312.pyc
+¦           wsgi.cpython-312.pyc
+¦           __init__.cpython-312.pyc
+¦           
++---static
+¦   +---css
+¦           style.css
+¦           
++---templates
+        base.html
+        home.html
+        navbar.html
+        

@@ -8,4 +8,4 @@ class QuizConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
 
     # Nome dell'applicazione, che deve corrispondere al nome della directory contenente questa configurazione.
-    name = "quiz"
+    name = "quizapp"

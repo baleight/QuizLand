@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",  # Gestione delle sessioni degli utenti.
     "django.contrib.messages",  # Sistema di messaggistica.
     "django.contrib.staticfiles",  # Gestione dei file statici (CSS, JS, immagini).
-    "quiz",  # Applicazione principale per la gestione dei quiz.
+    "quizapp",  # Applicazione principale per la gestione dei quiz.
     "users",  # Applicazione per la gestione degli utenti e autenticazione.
 ]
 

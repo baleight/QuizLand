@@ -9,6 +9,6 @@ from django.urls import path, include
 # Ogni path associa un URL a un modulo o applicazione specifica.
 urlpatterns = [
     path("admin/", admin.site.urls),  # Accesso al pannello di amministrazione.
-    path("", include("quiz.urls")),  # Rotte per l'applicazione "quiz".
+    path("", include("quizapp.urls")),  # Rotte per l'applicazione "quiz".
     path("", include("users.urls")),  # Rotte per l'applicazione "users".
 ]
