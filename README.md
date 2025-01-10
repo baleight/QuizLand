@@ -60,10 +60,10 @@ QuizLandè un'applicazione web basata su Django che offre una piattaforma intera
 
 1. **Installare pip**:
    - **Linux**: `python3 -m pip install --user --upgrade pip`
-   - **Windows**: `py -m pip install --upgrade pip`
+   - **Windows**: `pip install --upgrade pip`
 2. **Installare Virtualenv**:
    - **Linux**: `python3 -m pip install --user virtualenv`
-   - **Windows**: `py -m pip install --user virtualenv`
+   - **Windows**: `pip install --user virtualenv`
 3. **Creare un ambiente virtuale**:
    - **Linux**: `python3 -m venv venv`
    - **Windows**: `py -m venv env`
@@ -72,7 +72,7 @@ QuizLandè un'applicazione web basata su Django che offre una piattaforma intera
    - **Windows**: `.\venv\Scripts\activate`
 5. **Installare le dipendenze**:
    - **Linux**: `python3 -m pip install -r requirements.txt`
-   - **Windows**: `py -m pip install -r requirements.txt`
+   - **Windows**: `pip install -r requirements.txt`
 
 ------
 
