@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5" style="max-width: 600px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 30px;">
+        <h1 class="text-center mb-4" style="font-weight: bold; color: #343a40;">Update Quiz</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="input-group my-2">
+                <span for="id_name" class="input-group-text">Quiz Name</span>
+                <input type="text" name="name" class="form-control" id="id_name" value="{{ form.name.value }}" placeholder="Enter quiz name" />
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-text">Description</span>
+                <textarea class="form-control" aria-label="Description" name="description" class="form-control" id="id_description" rows="4" placeholder="Enter quiz description">{{ form.description.value }}</textarea>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-success btn-md">
+                    <i class="bi bi-save"></i> Save Changes
+                </button>
+            </div>
+
+            <div class="d-grid gap-2 mt-3">
+                <a href="{% url 'quiz:manage-quiz' %}" class="btn btn-secondary btn-md">
+                    <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

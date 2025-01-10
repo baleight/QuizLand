@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'quiz/css/add-quiz.css' %}">
+
+<!-- Contenitore principale -->
+<div class="container mt-3 add-quiz-container">
+    <h1 class="text-center mb-4">Add New Quiz</h1>
+
+    <!-- Form per aggiungere un nuovo quiz -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Campo per il nome del quiz -->
+        <div class="input-group my-2">
+            <span for="id_name" class="input-group-text">Quiz Name</span>
+            <input type="text" name="name" class="form-control" id="id_name" placeholder="Enter quiz name" />
+        </div>
+
+        <!-- Campo per la descrizione del quiz -->
+        <div class="input-group mb-3">
+            <span class="input-group-text">Description</span>
+            <textarea class="form-control" aria-label="Description" name="description" id="id_description" rows="4" placeholder="Enter quiz description"></textarea>
+        </div>
+
+        <!-- Pulsanti di salvataggio e annullamento -->
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success btn-md">
+                <i class="bi bi-save"></i> Save Quiz
+            </button>
+        </div>
+
+        <div class="d-grid gap-2 mt-3">
+            <a href="{% url 'quiz:manage-quiz' %}" class="btn btn-secondary btn-md">
+                <i class="bi bi-arrow-left"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'quiz/css/quiz_styles.css' %}">
+
+    <div class="container mt-5 quiz-container">
+        <h1 class="quiz-heading">{{ quiz_type.name }} Quiz</h1>
+
+        <div id = "timer" class= "my-3 text-center" style="font-family: Times New Roman, Times, serif;">
+            <strong>Time left: <span id="time-left">15</span> seconds</strong>
+        </div>
+
+        <form method="POST" action="{% url 'quiz:submit_answer' question_id=question.id %}">
+            {% csrf_token %}
+
+            <div class="mb-4 quiz-question">
+                <span id="idx">{{question_index}}. </span><label class="form-label">{{ question.question_text }}</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="a" required>
+                    <label class="form-check-label">{{ question.option_a }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="b">
+                    <label class="form-check-label">{{ question.option_b }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="c">
+                    <label class="form-check-label">{{ question.option_c }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="d">
+                    <label class="form-check-label">{{ question.option_d }}</label>
+                </div>
+            </div>
+
+            <div class="quiz-submit-button">
+                <button type="submit" class="btn btn-primary my-3 px-4">Submit Answer</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let timer = 15;
+        const timerDisplay = document.getElementById('time-left');
+        const timeInterval = setInterval(()=> {
+            timer--;
+            timerDisplay.textContent = timer;
+            if (timer <= 5){
+                timerDisplay.style.color = 'red';
+            }
+            if (timer <= 0){
+                clearInterval(timeInterval);
+                document.querySelector('form').submit();
+            }
+        }, 1000);
+    </script>
+{% endblock %}

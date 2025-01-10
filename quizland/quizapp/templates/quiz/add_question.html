@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-4" style="max-width: 800px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 30px;">
+    <!-- Header della pagina -->
+    <h1 class="text-center">Add a New Question</h1>
+
+    <!-- Form per aggiungere una nuova domanda -->
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <!-- Mostra il tipo di quiz -->
+            <label id="id_quiz_type" style="margin-top:5px">Quiz Type</label>
+            <div class="form-control">{{ quiz_type }}</div>
+        </div>
+
+        <!-- Campo per il testo della domanda -->
+        <div>
+            {{ form.question_text.label_tag }}
+            {{ form.question_text }}
+        </div>
+
+        <!-- Mostra errori del form, se presenti -->
+        {% if form.errors %}
+        <div class="alert alert-danger pt-2 pb-0">
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }} </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Opzioni della domanda (A, B, C, D) -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-1">
+                    {{ form.option_a.label_tag }}
+                    {{ form.option_a }}
+                </div>
+                <div class="mb-1">
+                    {{ form.option_b.label_tag }}
+                    {{ form.option_b }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-1">
+                    {{ form.option_c.label_tag }}
+                    {{ form.option_c }}
+                </div>
+                <div class="mb-1">
+                    {{ form.option_d.label_tag }}
+                    {{ form.option_d }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Campo per la risposta corretta -->
+        <div class="input-group my-2">
+            <span for="id_name" class="input-group-text">{{ form.correct_answer.label_tag }}</span>
+            {{ form.correct_answer }}
+        </div>
+
+        <!-- Pulsanti di azione -->
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Add Question</button>
+            <a href="{% url 'quiz:manage_questions' quiz_type.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock content %}
