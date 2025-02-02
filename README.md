@@ -116,25 +116,26 @@ Gli amministratori possono creare, modificare ed eliminare quiz e domande.
 
 ### Lato Professore:
 
-![image-20250202002747826](img\image-20250202002747826.png)
+<img src="https://i.postimg.cc/8zZ9yqsV/image-20250202002747826.png" style="zoom:0%;" />
 
 ---
 
-![image-20250202003457381](img\image-20250202003949589.png)
+<img src="https://i.postimg.cc/mDHngkjb/image-20250202003949589.png" style="zoom:0%;" />
 
 ---
 
-![image-20250202003627114](img\image-20250202003627114.png)
+<img src="https://i.postimg.cc/Y0BsG7DQ/image-20250202003627114.png" style="zoom:0%;" />
 
-![image-20250202003608179](img\image-20250202003608179.png)
+<img src="https://i.postimg.cc/0jGH74hF/image-20250202003608179.png" style="zoom:0%;" />
 
 ### Lato studente:
-![image-20250202022733585](img\image-20250202022733585.png)
+<img src="https://i.postimg.cc/J4mFR1kL/image-20250202022733585.png" style="zoom:0%;" />
 
 ---
 
-![image-20250202004232508](img\image-20250202004232508.png)
+<img src="https://i.postimg.cc/3w66hmgS/image-20250202004232508.png" style="zoom:0%;" />
 
 ---
 
-![image-20250202022853069](img\image-20250202022853069.png)
+<img src="https://i.postimg.cc/jdXF5GHJ/image-20250202022853069.png" style="zoom:0%;" />
+
