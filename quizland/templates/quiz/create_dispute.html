@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-warning">
+            <h2 class="mb-0">Contesta Domanda</h2>
+        </div>
+        
+        <div class="card-body">
+            <h4>Domanda:</h4>
+            <p>{{ question.question_text }}</p>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descrivi il motivo della contestazione:</label>
+                    <textarea name="description" id="description" class="form-control" rows="4" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-warning">Invia Contestazione</button>
+                <a href="{% url 'quizapp:quiz_results' quiz_type_id=question.quiz_type.id %}" class="btn btn-secondary">
+                    Annulla
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,28 @@
+/* Stili base del sito */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Stili comuni per i container */
+.container-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Stili comuni per i pulsanti */
+.btn {
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 1rem;
+}
+
+/* Stili per le tabelle */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+} 

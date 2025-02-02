@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'quiz/css/add-quiz.css' %}">
+
+<!-- Contenitore principale -->
+<div class="container mt-3 add-quiz-container">
+    <h1 class="text-center mb-4">Aggiungi Nuovo Quiz</h1>
+
+    <!-- Form per aggiungere un nuovo quiz -->
+    <form method="POST">
+        {% csrf_token %}
+    
+        <div class="input-group my-2">
+            <span for="id_name" class="input-group-text">Nome Quiz</span>
+            <input type="text" name="name" class="form-control" id="id_name" placeholder="Inserisci nome">
+        </div>
+    
+        <div class="input-group mb-3">
+            <span class="input-group-text">Descrizione</span>
+            <textarea name="description" class="form-control" id="id_description" rows="4"></textarea>
+        </div>
+    
+        <div class="input-group mb-3">
+            <span class="input-group-text">Categoria</span>
+            <select name="category" id="id_category" class="form-select">
+                {% for category in form.category.field.queryset %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="input-group mb-3">
+            <span class="input-group-text">Professori autorizzati</span>
+            {{ form.allowed_professors }}
+        </div>
+    
+        <button type="submit" class="btn btn-success">Salva</button>
+        <a href="{% url 'quizapp:manage_quiz' %}" class="btn btn-secondary">Annulla</a>
+    </form>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{# 
+  Template per lo svolgimento di un quiz.
+  Mostra:
+  - Titolo e descrizione del quiz
+  - Timer (se presente)
+  - Lista delle domande con opzioni multiple
+  - Pulsante di invio
+#}
+
+{% extends 'base.html' %}
+{% load quiz_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    {# Header del Quiz #}
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">{{ quiz.name }}</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">{{ quiz.description }}</p>
+            {% if assignment.due_date %}
+            {# Timer per quiz con scadenza #}
+            <div class="alert alert-warning">
+                <i class="fas fa-clock"></i> Scadenza: {{ assignment.due_date|date:"d/m/Y" }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Form per le risposte #}
+    <form method="POST" action="{% url 'quizapp:take_quiz' assignment.id %}">
+        {% csrf_token %}
+        
+        {# Lista delle domande #}
+        {% for question in questions %}
+        <div class="card mb-4 question-card" id="question-{{ forloop.counter }}">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    Domanda {{ forloop.counter }}/{{ questions|length }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="question-text">{{ question.question_text }}</p>
+                
+                {# Opzioni di risposta #}
+                <div class="options-list">
+                    {% for letter, text in question|get_question_options %}
+                    <div class="form-check option-item">
+                        <input type="radio" 
+                               name="question_{{ question.id }}" 
+                               value="{{ letter }}"
+                               id="q{{ question.id }}_{{ letter }}"
+                               class="form-check-input"
+                               required>
+                        <label class="form-check-label" for="q{{ question.id }}_{{ letter }}">
+                            {{ letter }}. {{ text }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {# Pulsanti di navigazione #}
+        <div class="d-flex justify-content-between mb-4">
+            <button type="button" id="prevQuestion" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Domanda Precedente
+            </button>
+            <button type="button" id="nextQuestion" class="btn btn-secondary">
+                Domanda Successiva <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        {# Pulsante di invio #}
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-check"></i> Consegna Quiz
+            </button>
+        </div>
+    </form>
+</div>
+
+{% block javascript %}
+<script>
+    // Gestione navigazione domande
+    document.addEventListener('DOMContentLoaded', function() {
+        const questions = document.querySelectorAll('.question-card');
+        let currentQuestion = 0;
+        
+        function showQuestion(index) {
+            questions.forEach((q, i) => {
+                q.style.display = i === index ? 'block' : 'none';
+            });
+            
+            document.getElementById('prevQuestion').disabled = index === 0;
+            document.getElementById('nextQuestion').disabled = index === questions.length - 1;
+        }
+        
+        document.getElementById('prevQuestion').addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        });
+        
+        document.getElementById('nextQuestion').addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        });
+        
+        // Mostra la prima domanda
+        showQuestion(0);
+    });
+    
+    // Conferma invio
+    document.getElementById('quizForm').onsubmit = function(e) {
+        return confirm('Sei sicuro di voler consegnare il quiz?');
+    };
+</script>
+{% endblock javascript %}
+
+{% endblock content %} 

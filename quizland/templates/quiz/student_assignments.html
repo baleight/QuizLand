@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>I Tuoi Quiz</h2>
+    
+    <!-- Quiz da completare -->
+    <div class="mb-5">
+        <h3>Quiz da Completare</h3>
+        <div class="row">
+            {% for assignment in pending_assignments %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ assignment.quiz.name }}</h5>
+                        <p class="card-text">{{ assignment.quiz.description }}</p>
+                        <p><strong>Categoria:</strong> {{ assignment.quiz.category.name }}</p>
+                        <p><strong>Assegnato da:</strong> {{ assignment.assigned_by.username }}</p>
+                        <p><strong>Data assegnazione:</strong> {{ assignment.assigned_date|date:"d/m/Y H:i" }}</p>
+                        {% if assignment.due_date %}
+                        <p class="text-danger">
+                            <strong>Scadenza:</strong> {{ assignment.due_date|date:"d/m/Y H:i" }}
+                        </p>
+                        {% endif %}
+                        <div class="mt-auto">
+                            <a href="{% url 'quizapp:start_quiz' quiz_type_id=assignment.quiz.id %}" 
+                               class="btn btn-primary w-100">
+                                Inizia Quiz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">
+                <div class="alert alert-info">
+                    Non hai quiz da completare al momento.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Quiz completati -->
+    <div>
+        <h3>Quiz Completati</h3>
+        <div class="row">
+            {% for assignment in completed_assignments %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ assignment.quiz.name }}</h5>
+                        <p class="card-text">{{ assignment.quiz.description }}</p>
+                        <p><strong>Categoria:</strong> {{ assignment.quiz.category.name }}</p>
+                        <p><strong>Punteggio:</strong> {{ assignment.score }}</p>
+                        <p><strong>Completato il:</strong> {{ assignment.assigned_date|date:"d/m/Y H:i" }}</p>
+                        <div class="mt-auto">
+                            <div class="btn-group w-100">
+                                <a href="{% url 'quizapp:quiz_results' quiz_type_id=assignment.quiz.id %}" 
+                                   class="btn btn-info">
+                                    Vedi Risultati
+                                </a>
+                                <form method="POST" action="{% url 'quizapp:reset_quiz' quiz_type_id=assignment.quiz.id %}" 
+                                      class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning">
+                                        Riprova Quiz
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">
+                <div class="alert alert-info">
+                    Non hai ancora completato nessun quiz.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .btn-group .btn {
+        flex: 1;
+    }
+</style>
+{% endblock %} 

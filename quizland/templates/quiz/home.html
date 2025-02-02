@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% if is_anonymous %}
+    <div class="container mt-5">
+        <div class="jumbotron text-center">
+            <h1 class="display-4">Benvenuto su QuizLand!</h1>
+            <p class="lead">La piattaforma per l'apprendimento interattivo</p>
+            <hr class="my-4">
+            <p>Registrati o accedi per iniziare a partecipare ai quiz</p>
+            <div class="mt-4">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg mx-2">
+                    <i class="fas fa-sign-in-alt"></i> Accedi
+                    </a>
+                <a href="{% url 'register' %}" class="btn btn-success btn-lg mx-2">
+                    <i class="fas fa-user-plus"></i> Registrati
+                </a>
+            </div>
+        </div>
+    </div>
+{% else %}
+
+    <div class="container mt-4">
+        {% if is_teacher %}
+        {# Vista per i professori #}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">I tuoi Quiz</h2>
+                        <a href="{% url 'quizapp:add_quiz' %}" class="btn btn-light">
+                            <i class="fas fa-plus"></i> Nuovo Quiz
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if quizzes %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Assegnazioni</th>
+                                        <th>Completati</th>
+                                        <th>Media Voti</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for quiz in quizzes %}
+                                    <tr>
+                                        <td>{{ quiz.name }}</td>
+                                        <td>{{ quiz.total_assignments }}</td>
+                                        <td>{{ quiz.completed_assignments }}</td>
+                                        <td>{{ quiz.average_score|default:"-" }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{% url 'quizapp:manage_questions' quiz_pk=quiz.id %}" 
+                                                   class="btn btn-sm btn-info">
+                                                    <i class="fas fa-list"></i> Domande
+                                                </a>
+                                                <a href="{% url 'quizapp:assign_quiz' quiz_type_id=quiz.id %}" 
+                                                   class="btn btn-sm btn-success">
+                                                    <i class="fas fa-user-plus"></i> Assegna
+                                                </a>
+                                                <a href="{% url 'quizapp:quiz_statistics_detail' quiz_type_id=quiz.id %}" 
+                                                   class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-chart-bar"></i> Statistiche
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info">
+                            Non hai ancora creato nessun quiz. <a href="{% url 'quizapp:add_quiz' %}">Crea il tuo primo quiz!</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-warning text-white">
+                        <h3 class="mb-0">Contestazioni Aperte</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if open_disputes_count > 0 %}
+                        <div class="alert alert-warning">
+                            <h4 class="alert-heading">{{ open_disputes_count }} contestazioni da revisionare</h4>
+                            <p class="mb-0">
+                                <a href="{% url 'quizapp:list_disputes' %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-exclamation-triangle"></i> Gestisci Contestazioni
+                                </a>
+                            </p>
+                        </div>
+                        {% else %}
+                        <p class="text-muted mb-0">Non ci sono contestazioni aperte.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Dashboard Studente -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <i class="fas fa-user-graduate"></i> 
+                            Benvenuto, {{ request.user.username }}!
+                        </h2>
+                        <p class="lead mb-0">La tua dashboard personale</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Statistiche Rapide -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="display-4 text-primary mb-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="card-title">Le tue statistiche</h3>
+                        <div class="stats-container">
+                            <div class="stat-item mb-3">
+                                <h4 class="text-muted">Quiz Completati</h4>
+                                <p class="h2 text-primary mb-0">{{ stats.total_completed|default:"0" }}</p>
+                            </div>
+                            <div class="stat-item mb-3">
+                                <h4 class="text-muted">Media Punteggi</h4>
+                                <p class="h2 text-success mb-0">
+                                    {% if stats.avg_score %}
+                                        {{ stats.avg_score|floatformat:1 }}/10
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="stat-item">
+                                <h4 class="text-muted">Miglior Punteggio</h4>
+                                <p class="h2 text-warning mb-0">
+                                    {% if stats.best_score %}
+                                        {{ stats.best_score }}/10
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz da Completare -->
+            <div class="col-md-8 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-tasks text-primary"></i> Quiz da Completare
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% if pending_assignments %}
+                            <div class="list-group">
+                                {% for assignment in pending_assignments %}
+                                    <a href="{% url 'quizapp:take_quiz' assignment.id %}" 
+                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">{{ assignment.quiz.name }}</h5>
+                                            <small class="text-muted">
+                                                Assegnato: {{ assignment.assigned_date|date:"d/m/Y" }}
+                                            </small>
+                                        </div>
+                                        {% if assignment.due_date %}
+                                            <span class="badge bg-warning text-dark">
+                                                Scade: {{ assignment.due_date|date:"d/m/Y" }}
+                                            </span>
+                                        {% endif %}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                <p class="lead mb-0">Nessun quiz in sospeso!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Completati Recentemente -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="card-title mb-0">
+                                <i class="fas fa-history text-primary"></i> Quiz Completati Recentemente
+                            </h3>
+                            <a href="{% url 'quizapp:quiz_history' %}" class="btn btn-outline-primary btn-sm">
+                                Vedi Tutti
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% if completed_assignments %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Quiz</th>
+                                            <th>Data</th>
+                                            <th>Punteggio</th>
+                                            <th>Azioni</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for assignment in completed_assignments %}
+                                            <tr>
+                                                <td>{{ assignment.quiz.name }}</td>
+                                                <td>{{ assignment.completed_at|date:"d/m/Y H:i" }}</td>
+                                                <td>
+                                                    <span class="badge bg-{% if assignment.score >= 6 %}success{% else %}danger{% endif %}">
+                                                        {{ assignment.score }}/10
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="{% url 'quizapp:quiz_results' assignment.id %}" 
+                                                       class="btn btn-info btn-sm">
+                                                        <i class="fas fa-eye"></i> Dettagli
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-clipboard-list text-muted fa-3x mb-3"></i>
+                                <p class="lead mb-0">Non hai ancora completato nessun quiz</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endif %}
+
+<style>
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.stats-container .stat-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+.stats-container .stat-item:last-child {
+    border-bottom: none;
+}
+.badge {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+}
+</style>
+{% endblock %}

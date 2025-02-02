@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Risultati del Quiz: {{ quiz.name }}</h2>
+        </div>
+        <div class="card-body">
+            <h3>Punteggio Finale</h3>
+            <div class="alert alert-info">
+                <p>Hai risposto correttamente a {{ quiz_session.score }} domande su {{ total_questions }}</p>
+                <p>Percentuale di successo: {{ score_percentage|floatformat:1 }}%</p>
+            </div>
+            
+            {% if score_percentage >= 70 %}
+                <div class="alert alert-success">
+                    <h4>Congratulazioni! 🎉</h4>
+                    <p>Hai superato il quiz con successo!</p>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <h4>Continua a studiare! 📚</h4>
+                    <p>Puoi fare di meglio la prossima volta.</p>
+                </div>
+            {% endif %}
+            
+            <div class="mt-4">
+                <a href="{% url 'quizapp:start_quiz' quiz_type_id=quiz.id %}" class="btn btn-primary">Riprova Quiz</a>
+                <a href="{% url 'quizapp:home' %}" class="btn btn-secondary">Torna alla Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Assegna Quiz: {{ quiz.name }}</h2>
+        </div>
+        
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                {# Data di scadenza #}
+                <div class="mb-4">
+                    <label for="due_date" class="form-label">Data di Scadenza (opzionale)</label>
+                    <input type="date" 
+                           class="form-control" 
+                           id="due_date" 
+                           name="due_date">
+                </div>
+                
+                {# Lista studenti #}
+                <div class="mb-4">
+                    <h5>Seleziona Studenti</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" 
+                                               id="selectAll" 
+                                               class="form-check-input">
+                                    </th>
+                                    <th>Username</th>
+                                    <th>Nome</th>
+                                    <th>Cognome</th>
+                                    <th>Stato</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" 
+                                               name="students" 
+                                               value="{{ student.id }}"
+                                               class="form-check-input student-checkbox"
+                                               {% if student.id in existing_assignments %}disabled{% endif %}>
+                                    </td>
+                                    <td>{{ student.username }}</td>
+                                    <td>{{ student.first_name }}</td>
+                                    <td>{{ student.last_name }}</td>
+                                    <td>
+                                        {% if student.id in existing_assignments %}
+                                        <span class="badge bg-warning">Già Assegnato</span>
+                                        {% else %}
+                                        <span class="badge bg-success">Disponibile</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                {# Pulsanti #}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Assegna Quiz
+                    </button>
+                    <a href="{% url 'quizapp:manage_quiz' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annulla
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Gestione checkbox "Seleziona tutti"
+    document.getElementById('selectAll').addEventListener('change', function() {
+        var checkboxes = document.getElementsByClassName('student-checkbox');
+        for (var checkbox of checkboxes) {
+            if (!checkbox.disabled) {
+                checkbox.checked = this.checked;
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock content %} 

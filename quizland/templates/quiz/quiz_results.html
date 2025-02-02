@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load quiz_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header con punteggio principale -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Quiz completato: {{ quiz.name }}</h2>
+        </div>
+        <div class="card-body">
+            <h3 class="text-center mb-4 {% if score >= 6 %}text-success{% else %}text-danger{% endif %}">
+                Punteggio finale: {{ score }}/10
+            </h3>
+            
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5>Risposte Corrette</h5>
+                            <h4>{{ correct_responses }}/{{ total_questions }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5>Data Completamento</h5>
+                            <h4>{{ assignment.completed_at|date:"d/m/Y H:i" }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5>Tempo Impiegato</h5>
+                            <h4>{{ assignment.get_duration }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revisione delle domande -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">Revisione Domande</h3>
+        </div>
+        <div class="card-body">
+            {% for question in questions %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Domanda {{ forloop.counter }}</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ question.question_text }}</p>
+                    
+                    <div class="options-list">
+                        <p class="{% if 'A' == answers|get:question.id %}fw-bold{% endif %}">
+                            A. {{ question.option_a }}
+                            {% if 'A' == answers|get:question.id %}
+                                {% if 'A' == question.correct_answer %}
+                                    <i class="fas fa-check text-success"></i>
+                                {% else %}
+                                    <i class="fas fa-times text-danger"></i>
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                        <p class="{% if 'B' == answers|get:question.id %}fw-bold{% endif %}">
+                            B. {{ question.option_b }}
+                            {% if 'B' == answers|get:question.id %}
+                                {% if 'B' == question.correct_answer %}
+                                    <i class="fas fa-check text-success"></i>
+                                {% else %}
+                                    <i class="fas fa-times text-danger"></i>
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                        <p class="{% if 'C' == answers|get:question.id %}fw-bold{% endif %}">
+                            C. {{ question.option_c }}
+                            {% if 'C' == answers|get:question.id %}
+                                {% if 'C' == question.correct_answer %}
+                                    <i class="fas fa-check text-success"></i>
+                                {% else %}
+                                    <i class="fas fa-times text-danger"></i>
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                        <p class="{% if 'D' == answers|get:question.id %}fw-bold{% endif %}">
+                            D. {{ question.option_d }}
+                            {% if 'D' == answers|get:question.id %}
+                                {% if 'D' == question.correct_answer %}
+                                    <i class="fas fa-check text-success"></i>
+                                {% else %}
+                                    <i class="fas fa-times text-danger"></i>
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="mt-3">
+                        <p>
+                            <strong>La tua risposta:</strong>
+                            {% if answers|get:question.id %}
+                                <span class="{% if question.id in correct_answers %}text-success{% else %}text-danger{% endif %}">
+                                    {{ answers|get:question.id }}
+                                </span>
+                            {% else %}
+                                <span class="text-warning">Non hai risposto a questa domanda</span>
+                            {% endif %}
+                        </p>
+                        
+                        {% if answers|get:question.id != question.correct_answer %}
+                        <p>
+                            <strong>Risposta corretta:</strong>
+                            <span class="text-success">{{ question.correct_answer }}</span>
+                        </p>
+                        {% endif %}
+                        
+                        <!-- Aggiungi qui il pulsante per contestare -->
+                        <div class="mt-3">
+                            <button type="button" 
+                                    class="btn btn-warning btn-sm"
+                                    onclick="openDisputeModal({{ question.id }})"
+                                    {% if question.id in disputed_questions %}disabled{% endif %}>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                {% if question.id in disputed_questions %}
+                                    Contestazione inviata
+                                {% else %}
+                                    Contesta questa domanda
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="text-center mb-4">
+        <a href="{% url 'quizapp:home' %}" class="btn btn-secondary me-2">
+            <i class="fas fa-home"></i> Torna alla Home
+        </a>
+        
+        <!-- Pulsante per riavviare il quiz -->
+        <a href="{% url 'quizapp:reset_quiz' quiz.id %}" 
+           class="btn btn-primary me-2"
+           onclick="return confirm('Sei sicuro di voler ripetere questo quiz?');">
+            <i class="fas fa-redo"></i> Ripeti Quiz
+        </a>
+        
+        <!-- Pulsante per vedere la cronologia -->
+        <a href="{% url 'quizapp:quiz_history' %}" class="btn btn-info">
+            <i class="fas fa-history"></i> Cronologia Quiz
+        </a>
+    </div>
+</div>
+
+<!-- Aggiungi questo modal per le contestazioni -->
+<div class="modal fade" id="disputeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Contesta Domanda</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" id="disputeForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="disputeReason">Motivo della contestazione:</label>
+                        <textarea class="form-control" id="disputeReason" name="reason" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="submit" class="btn btn-primary">Invia Contestazione</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block javascript %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestione delle contestazioni
+    function openDisputeModal(questionId) {
+        const modal = new bootstrap.Modal(document.getElementById('disputeModal'));
+        const form = document.getElementById('disputeForm');
+        form.action = `/question/${questionId}/dispute/`;
+        modal.show();
+    }
+    
+    // Rendi la funzione disponibile globalmente
+    window.openDisputeModal = openDisputeModal;
+});
+</script>
+{% endblock %}
+
+<style>
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.option-item {
+    transition: all 0.3s ease;
+}
+.option-item:hover {
+    opacity: 0.9;
+}
+</style>
+{% endblock %}

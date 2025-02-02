@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% if not user.is_authenticated %}
+        <div class="text-center">
+            <p>Per favore effettua il login per accedere ai quiz.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <h1>Nessuna domanda disponibile</h1>
+            <p>Il quiz "{{ quiz_type.name }}" non ha ancora domande.</p>
+            <a href="{% url 'quizapp:home' %}" class="btn btn-primary">Torna alla Home</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

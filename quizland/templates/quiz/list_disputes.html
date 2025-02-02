@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">
+                {% if is_teacher %}
+                Gestione Contestazioni
+                {% else %}
+                Le Tue Contestazioni
+                {% endif %}
+            </h2>
+        </div>
+
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if is_teacher %}
+                <!-- Vista Professore -->
+                <ul class="nav nav-tabs mb-4" id="disputeTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="open-tab" data-bs-toggle="tab" href="#open" role="tab">
+                            Aperte <span class="badge bg-warning">{{ open_disputes.count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="resolved-tab" data-bs-toggle="tab" href="#resolved" role="tab">
+                            Risolte <span class="badge bg-success">{{ resolved_disputes.count }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="rejected-tab" data-bs-toggle="tab" href="#rejected" role="tab">
+                            Respinte <span class="badge bg-danger">{{ rejected_disputes.count }}</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="disputeTabContent">
+                    <!-- Contestazioni Aperte -->
+                    <div class="tab-pane fade show active" id="open" role="tabpanel">
+                        {% for dispute in open_disputes %}
+                            <div class="card mb-3 dispute-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Quiz: {{ dispute.question.quiz_type.name }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Studente: {{ dispute.student.username }}</h6>
+                                    <p><strong>Domanda:</strong> {{ dispute.question.question_text }}</p>
+                                    <p><strong>Contestazione:</strong> {{ dispute.description }}</p>
+                                    <p><small class="text-muted">Creata il: {{ dispute.created_at|date:"d/m/Y H:i" }}</small></p>
+                                    <a href="{% url 'quizapp:resolve_dispute' dispute_pk=dispute.pk %}" 
+                                       class="btn btn-primary">
+                                        Risolvi Contestazione
+                                    </a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="alert alert-info">Nessuna contestazione aperta.</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Contestazioni Risolte -->
+                    <div class="tab-pane fade" id="resolved" role="tabpanel">
+                        {% for dispute in resolved_disputes %}
+                            <div class="card mb-3 dispute-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Quiz: {{ dispute.question.quiz_type.name }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Studente: {{ dispute.student.username }}</h6>
+                                    <p><strong>Domanda:</strong> {{ dispute.question.question_text }}</p>
+                                    <p><strong>Contestazione:</strong> {{ dispute.description }}</p>
+                                    <p><strong>Risoluzione:</strong> {{ dispute.resolution_note }}</p>
+                                    <p><small class="text-muted">
+                                        Risolta da {{ dispute.resolved_by.username }} il {{ dispute.resolved_at|date:"d/m/Y H:i" }}
+                                    </small></p>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="alert alert-info">Non ci sono contestazioni risolte.</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Contestazioni Respinte -->
+                    <div class="tab-pane fade" id="rejected" role="tabpanel">
+                        {% for dispute in rejected_disputes %}
+                            <div class="card mb-3 dispute-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Quiz: {{ dispute.question.quiz_type.name }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">Studente: {{ dispute.student.username }}</h6>
+                                    <p><strong>Domanda:</strong> {{ dispute.question.question_text }}</p>
+                                    <p><strong>Contestazione:</strong> {{ dispute.description }}</p>
+                                    <p><strong>Motivazione rifiuto:</strong> {{ dispute.resolution_note }}</p>
+                                    <p><small class="text-muted">
+                                        Respinta da {{ dispute.resolved_by.username }} il {{ dispute.resolved_at|date:"d/m/Y H:i" }}
+                                    </small></p>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="alert alert-info">Non ci sono contestazioni respinte.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            {% else %}
+                <!-- Vista Studente -->
+                <div class="list-group">
+                    {% for dispute in disputes %}
+                        <div class="list-group-item">
+                            <h5 class="mb-1">Quiz: {{ dispute.question.quiz_type.name }}</h5>
+                            <p class="mb-1"><strong>Domanda:</strong> {{ dispute.question.question_text }}</p>
+                            <p class="mb-1"><strong>Tua contestazione:</strong> {{ dispute.description }}</p>
+                            <p class="mb-1">
+                                <span class="badge {% if dispute.status == 'OPEN' %}bg-warning{% elif dispute.status == 'RESOLVED' %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ dispute.get_status_display }}
+                                </span>
+                            </p>
+                            {% if dispute.resolution_note %}
+                                <p class="mb-1"><strong>Risposta del professore:</strong> {{ dispute.resolution_note }}</p>
+                                <small class="text-muted">
+                                    Risposto da {{ dispute.resolved_by.username }} il {{ dispute.resolved_at|date:"d/m/Y H:i" }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-info">Non hai ancora fatto contestazioni.</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .dispute-card {
+        transition: transform 0.2s;
+    }
+    
+    .dispute-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .nav-tabs .nav-link {
+        color: #495057;
+    }
+    
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+    }
+    
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Aggiungi Domanda per {{ quiz.name }}</h2>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="POST" class="mt-4">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+        
+        <div class="mb-3">
+            <label for="{{ form.question_text.id_for_label }}" class="form-label">Domanda:</label>
+            {{ form.question_text }}
+            {% if form.question_text.errors %}
+            <div class="alert alert-danger">
+                {{ form.question_text.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.option_a.id_for_label }}" class="form-label">Opzione A:</label>
+            {{ form.option_a }}
+            {% if form.option_a.errors %}
+            <div class="alert alert-danger">
+                {{ form.option_a.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.option_b.id_for_label }}" class="form-label">Opzione B:</label>
+            {{ form.option_b }}
+            {% if form.option_b.errors %}
+            <div class="alert alert-danger">
+                {{ form.option_b.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.option_c.id_for_label }}" class="form-label">Opzione C:</label>
+            {{ form.option_c }}
+            {% if form.option_c.errors %}
+            <div class="alert alert-danger">
+                {{ form.option_c.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.option_d.id_for_label }}" class="form-label">Opzione D:</label>
+            {{ form.option_d }}
+            {% if form.option_d.errors %}
+            <div class="alert alert-danger">
+                {{ form.option_d.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.correct_answer.id_for_label }}" class="form-label">Risposta Corretta:</label>
+            {{ form.correct_answer }}
+            {% if form.correct_answer.errors %}
+            <div class="alert alert-danger">
+                {{ form.correct_answer.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.difficulty.id_for_label }}" class="form-label">Difficoltà:</label>
+            {{ form.difficulty }}
+            {% if form.difficulty.errors %}
+            <div class="alert alert-danger">
+                {{ form.difficulty.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Salva Domanda</button>
+            <a href="{% url 'quizapp:manage_questions' quiz_pk=quiz.pk %}" class="btn btn-secondary">Annulla</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

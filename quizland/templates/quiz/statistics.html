@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">
+                {% if quiz %}
+                    Statistiche: {{ quiz.name }}
+                {% else %}
+                    Panoramica Statistiche
+                {% endif %}
+            </h2>
+        </div>
+
+        <div class="card-body">
+            {% if is_teacher %}
+                {% if quiz %}
+                    {# Statistiche dettagliate per un quiz specifico #}
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>Tentativi Totali</h5>
+                                    <h2>{{ stats.total_attempts }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>Punteggio Medio</h5>
+                                    <h2>{{ stats.average_score }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>Studenti Partecipanti</h5>
+                                    <h2>{{ stats.total_students }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Grafico distribuzione punteggi #}
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Distribuzione Punteggi</h5>
+                                    <canvas id="scoreDistribution"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Tabella statistiche per studente #}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5>Statistiche per Studente</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Studente</th>
+                                            <th>Tentativi</th>
+                                            <th>Miglior Punteggio</th>
+                                            <th>Media</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for stat in student_stats %}
+                                        <tr>
+                                            <td>{{ stat.student__username }}</td>
+                                            <td>{{ stat.attempts }}</td>
+                                            <td>{{ stat.best_score }}</td>
+                                            <td>{{ stat.avg_score }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                {% else %}
+                    {# Panoramica di tutti i quiz #}
+                    <div class="row">
+                        {% for quiz in quizzes %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ quiz.name }}</h5>
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Assegnazioni</span>
+                                            <span class="stat-value">{{ quiz.total_assignments }}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Completati</span>
+                                            <span class="stat-value">{{ quiz.completed_assignments }}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Media</span>
+                                            <span class="stat-value">{{ quiz.average_score }}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Contestazioni</span>
+                                            <span class="stat-value">{{ quiz.total_disputes }}</span>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'quizapp:quiz_statistics' quiz_type_id=quiz.id %}" 
+                                       class="btn btn-primary mt-3">
+                                        Dettagli
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            {% else %}
+                {% if quiz %}
+                    {# Statistiche studente per un quiz specifico #}
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>Tentativi</h5>
+                                    <h2>{{ stats.total_attempts }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>Miglior Punteggio</h5>
+                                    <h2>{{ stats.best_score }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>Media</h5>
+                                    <h2>{{ stats.average_score }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>Ultimo Tentativo</h5>
+                                    <h2>{{ stats.last_attempt|date:"d/m" }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Grafico progressione punteggi #}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Progressione Punteggi</h5>
+                            <canvas id="scoreProgression"></canvas>
+                        </div>
+                    </div>
+
+                {% else %}
+                    {# Panoramica di tutti i quiz dello studente #}
+                    <div class="row">
+                        {% for stat in quiz_stats %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ stat.quiz__name }}</h5>
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Tentativi</span>
+                                            <span class="stat-value">{{ stat.attempts }}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Miglior Punteggio</span>
+                                            <span class="stat-value">{{ stat.best_score }}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Media</span>
+                                            <span class="stat-value">{{ stat.avg_score }}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Ultimo Tentativo</span>
+                                            <span class="stat-value">{{ stat.last_attempt|date:"d/m" }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .stat-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .stat-value {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #0d6efd;
+    }
+    
+    .card {
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+</style>
+
+{% if quiz %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if is_teacher %}
+            // Grafico distribuzione punteggi per i professori
+            const scoreCtx = document.getElementById('scoreDistribution').getContext('2d');
+            new Chart(scoreCtx, {
+                type: 'bar',
+                data: {
+                    labels: [{% for item in score_distribution %}'{{ item.score }}',{% endfor %}],
+                    datasets: [{
+                        label: 'Numero di studenti',
+                        data: [{% for item in score_distribution %}{{ item.count }},{% endfor %}],
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        {% else %}
+            // Grafico progressione punteggi per gli studenti
+            const progressCtx = document.getElementById('scoreProgression').getContext('2d');
+            new Chart(progressCtx, {
+                type: 'line',
+                data: {
+                    labels: [{% for item in score_progression %}'{{ item.assigned_date|date:"d/m" }}',{% endfor %}],
+                    datasets: [{
+                        label: 'Punteggio',
+                        data: [{% for item in score_progression %}{{ item.score }},{% endfor %}],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        {% endif %}
+    });
+</script>
+{% endif %}
+{% endblock %} 

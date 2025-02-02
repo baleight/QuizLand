@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>{% if question %}Modifica{% else %}Aggiungi{% endif %} Domanda</h2>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Salva
+                    </button>
+                    <a href="{% url 'quizapp:manage_questions' quiz_pk=question.quiz_type.id %}" 
+                       class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annulla
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

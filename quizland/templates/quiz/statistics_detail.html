@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Statistiche: {{ quiz.name }}</h2>
+            <a href="{% url 'quizapp:manage_quiz' %}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Torna ai Quiz
+            </a>
+        </div>
+        
+        <div class="card-body">
+            {# Statistiche generali #}
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <h5>Tentativi Totali</h5>
+                            <h3>{{ stats.total_attempts|default:"0" }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <h5>Completati</h5>
+                            <h3>{{ stats.completed_attempts|default:"0" }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <h5>Media Voti</h5>
+                            <h3>{{ stats.avg_score|default:"-" }}/10</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <h5>Voto Più Alto</h5>
+                            <h3>{{ stats.max_score|default:"-" }}/10</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Distribuzione dei punteggi #}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Distribuzione Punteggi</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Punteggio</th>
+                                    <th>Numero di Studenti</th>
+                                    <th>Percentuale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for score in score_distribution %}
+                                <tr>
+                                    <td>{{ score.score }}/10</td>
+                                    <td>{{ score.count }}</td>
+                                    <td>
+                                        {% widthratio score.count stats.completed_attempts 100 %}%
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        Nessun dato disponibile
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {# Performance degli studenti #}
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Performance Studenti</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Studente</th>
+                                    <th>Data Completamento</th>
+                                    <th>Punteggio</th>
+                                    <th>Tempo Impiegato</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for assignment in student_performance %}
+                                <tr>
+                                    <td>{{ assignment.student.get_full_name|default:assignment.student.username }}</td>
+                                    <td>{{ assignment.completed_at|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <span class="badge {% if assignment.score >= 6 %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ assignment.score }}/10
+                                        </span>
+                                    </td>
+                                    <td>{{ assignment.get_duration }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        Nessuno studente ha ancora completato questo quiz
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

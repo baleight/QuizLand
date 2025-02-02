@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'quiz/css/styles.css' %}">
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Gestione Quiz</h2>
+                <a href="{% url 'quizapp:add_quiz' %}" class="btn btn-light">
+                    <i class="fas fa-plus"></i> Nuovo Quiz
+                </a>
+            </div>
+            
+            <div class="card-body">
+                {% if quizzes %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Domande</th>
+                                <th>Data Creazione</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quiz in quizzes %}
+                            <tr>
+                                <td>{{ quiz.name }}</td>
+                                <td>{{ quiz.category.name }}</td>
+                                <td>{{ quiz.questions.count }}</td>
+                                <td>{{ quiz.created_at|date:"d/m/Y" }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{% url 'quizapp:manage_questions' quiz_pk=quiz.id %}" 
+                                           class="btn btn-sm btn-info">
+                                            <i class="fas fa-list"></i> Domande
+                                        </a>
+                                        <a href="{% url 'quizapp:assign_quiz' quiz_type_id=quiz.id %}" 
+                                           class="btn btn-sm btn-success">
+                                            <i class="fas fa-user-plus"></i> Assegna
+                                        </a>
+                                        <a href="{% url 'quizapp:quiz_statistics_detail' quiz_type_id=quiz.id %}" 
+                                           class="btn btn-sm btn-warning">
+                                            <i class="fas fa-chart-bar"></i> Statistiche
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    Non ci sono ancora quiz. <a href="{% url 'quizapp:add_quiz' %}">Crea il primo quiz!</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .card {
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-group {
+            margin-top: auto;
+        }
+        
+        .btn {
+            margin: 2px;
+        }
+    </style>
+{% endblock content %}
