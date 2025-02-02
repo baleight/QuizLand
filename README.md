@@ -128,7 +128,8 @@ Gli amministratori possono creare, modificare ed eliminare quiz e domande.
 
 ![image-20250202003608179](img\image-20250202003608179.png)
 
-### Lato studente:![image-20250202022733585](img\image-20250202022733585.png)
+### Lato studente:
+![image-20250202022733585](img\image-20250202022733585.png)
 
 ---
 
@@ -137,6 +138,3 @@ Gli amministratori possono creare, modificare ed eliminare quiz e domande.
 ---
 
 ![image-20250202022853069](img\image-20250202022853069.png)
-=======
-*(Inserisci screenshot delle pagine più significative, ad esempio: pagina del quiz, pagina dei risultati, gestione quiz da admin.)*
->>>>>>> 03931fc3a4d03c4f81848b0abcf9c6350b30398c
